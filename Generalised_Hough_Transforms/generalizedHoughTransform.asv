@@ -168,10 +168,11 @@ imwrite(Bear_1, 'accumulatorMatrixBear1.bmp', 'bmp');
 
 [first_bear_x,first_bear_y] = find(The_R_TablePos == max(max(The_R_TablePos)));
 
-%Subplot the first bear and its max value 
-subplot(222),imshow(Bear_1),title('Bear 1');
+%the votes:
+str = sprintf('Accumulator Matrix for object 1:(%d, %d)',first_bear_y,first_bear_x);
+subplot(222),imshow(Bear_1),title(str);
 hold on;
-circle(first_bear_y, first_bear_x, 3);
+circle(first_bear_y, first_bear_x, 5);
 
 %Step C.2: Bear 2
 Bear_2 = mat2gray(Phi_R_TablePos);
@@ -180,13 +181,15 @@ imwrite(Bear_2, 'accumulatorMatrixBear2.bmp', 'bmp');
 
 [second_bear_x,second_bear_y] = find(Phi_R_TablePos == max(max(Phi_R_TablePos)));
 
-%Subplot the second bear and its max value 
 subplot(223),imshow(Bear_2),title('Bear 2');
 hold on;
-circle(second_bear_y, second_bear_x, 3);
+circle(second_bear_y, second_bear_x, 5);
 
-%plot the original image
-subplot(224),imshow(im),title('');
+subplot(224),imshow(im),title('Result');
+hold on;
+plot(first_bear_y,first_bear_x,'g+', 'MarkerSize', 4);
+hold on;
+plot(second_bear_y,second_bear_x,'g+', 'MarkerSize', 4);
 hold on;
 circle(first_bear_y, first_bear_x, 20);
 hold on;
