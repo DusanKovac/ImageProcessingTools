@@ -73,6 +73,7 @@ gradient_image = atan2(imfilter(double(im_gray_edge),[1; -1],'same'),imfilter(do
 %Dealing with the first rotation
 % (-1/6)pi
 Angle_The = 0;
+Scale_edge = 1;
 R_Table_The = zeros(full_circle_angle, size(x_pos,1), 2); 
 % (-2/3)pi
 Angle_Phi = (2/18)*pi();
@@ -104,9 +105,9 @@ while i <= size(x_pos,1)
     
     %RTable_The calc:
     %X val
-    R_Table_The(gradient_coe,bin_coe,1) = round(a * dx - b * dy);
+    R_Table_The(gradient_coe,bin_coe,1) = round(a * Scale_edge * dx - b * Scale_edge * dy);
     %Y val
-    R_Table_The(gradient_coe,bin_coe,2) = round(b * dx + a * dy);
+    R_Table_The(gradient_coe,bin_coe,2) = round(b * Scale_edge * dx + a * Scale_edge * dy);
     
     %RTable_Phi calc:
     %X val
@@ -161,7 +162,6 @@ for outer=1:1:size(x_prime,1)
     end
     
 end
-
 %Step C: Display
 
 %Step C.1: Bear 1

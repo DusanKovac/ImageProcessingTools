@@ -17,7 +17,7 @@ half_circle_angle = 180;
 im = imread('letters.png');
 
 %Template we searching for, will need to be gray scaled
-im_template = imread('template_Q.png');
+im_template = imread('template_K.png');
 
 %Convert to Gray levels
 im_gray = rgb2gray(im);
@@ -72,10 +72,10 @@ gradient_image = atan2(imfilter(double(im_gray_edge),[1; -1],'same'),imfilter(do
 
 %Dealing with the first rotation
 % (-1/6)pi
-Angle_The = 0;
+Angle_The = (1/18);
 R_Table_The = zeros(full_circle_angle, size(x_pos,1), 2); 
 % (-2/3)pi
-Angle_Phi = (2/18)*pi();
+Angle_Phi = -1/18)*pi()(-1/18)*pi();
 R_Table_Phi = zeros(full_circle_angle, size(x_pos,1), 2);
 
 %Find center of the template that had edge detection ran on it
@@ -170,15 +170,19 @@ Bear_1 = mat2gray(The_R_TablePos);
 imwrite(Bear_1, 'accumulatorMatrixBear1.bmp', 'bmp');
 temp = max(max(The_R_TablePos));
 [first_bear_x,first_bear_y] = find(The_R_TablePos == temp);
-temp = max(max(The_R_TablePos(The_R_TablePos < temp-1)));
-[first_bear_x_1,first_bear_y_1] = find(The_R_TablePos == max(max(The_R_TablePos)));
-% [first_bear_x,first_bear_y] = find(The_R_TablePos == max(max(The_R_TablePos)));
+temp = max(max(The_R_TablePos(The_R_TablePos < (temp-100))));
+[first_bear_x_1,first_bear_y_1] = find(The_R_TablePos == temp);
+temp = max(max(The_R_TablePos(The_R_TablePos < (temp-10))));
+[first_bear_x_2,first_bear_y_2] = find(The_R_TablePos == temp);
 
 %Subplot the first bear and its max value 
 subplot(222),imshow(Bear_1),title('Bear 1');
 hold on;
+circle(first_bear_y, first_bear_x, 3);
+hold on;
 circle(first_bear_y_1, first_bear_x_1, 3);
 hold on;
+circle(first_bear_y_2, first_bear_x_2, 3);
 
 
 %Step C.2: Bear 2
@@ -194,6 +198,8 @@ hold on;
 circle(second_bear_y, second_bear_x, 3);
 
 %plot the original image
+%I guess automation could be added in to find and select the q's but I am
+%currently strapped for tiem
 subplot(224),imshow(im),title('');
 hold on;
 circle(first_bear_y, first_bear_x, 35);
@@ -203,6 +209,14 @@ hold on;
 circle(second_bear_y, second_bear_x, 35);
 hold on;
 circle(second_bear_y, second_bear_x, 4);
+hold on;
+circle(first_bear_y_1, first_bear_x_1, 35);
+hold on;
+circle(first_bear_y_1, first_bear_x_1, 4);
+hold on;
+circle(first_bear_y_2, first_bear_x_2, 35);
+hold on;
+circle(first_bear_y_2, first_bear_x_2, 4);
 
 % The following link was used as reference on how to create a subplot
 % circle, I had no idea how to do one so I followed this individuals

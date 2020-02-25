@@ -17,7 +17,7 @@ half_circle_angle = 180;
 im = imread('letters.png');
 
 %Template we searching for, will need to be gray scaled
-im_template = imread('template_Q.png');
+im_template = imread('template_K.png');
 
 %Convert to Gray levels
 im_gray = rgb2gray(im);
@@ -75,7 +75,7 @@ gradient_image = atan2(imfilter(double(im_gray_edge),[1; -1],'same'),imfilter(do
 Angle_The = 0;
 R_Table_The = zeros(full_circle_angle, size(x_pos,1), 2); 
 % (-2/3)pi
-Angle_Phi = (2/18)*pi();
+Angle_Phi = (-1/18)*pi();
 R_Table_Phi = zeros(full_circle_angle, size(x_pos,1), 2);
 
 %Find center of the template that had edge detection ran on it
