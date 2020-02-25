@@ -1,10 +1,10 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% File Name:   simpleEdgeDetection.m
-% Description: Uses matlab functions and edge operators we learnt in class
+% File Name:   generaliszedHoughTransform.m
+% Description: Using GHT's find the shapes and letters
 % Input:       .png files which are unsharpened 
 % Output:      .bmp files that have been sharpened
-% Environment: Matlab R2018b
-% Usage:       In Matlab Command Window, type 'simpleEdgeDetection'.
+% Environment: Matlab R2019b
+% Usage:       In Matlab Command Window, type 'generaliszedHoughTransform'.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 clear all;
@@ -14,10 +14,10 @@ half_circle_angle = 180;
 
 %Original image, we will need to gray value it later and use smoothing
 %filter
-im = imread('animals.jpg');
+im = imread('letters.png');
 
 %Template we searching for, will need to be gray scaled
-im_template = imread('template_bear.png');
+im_template = imread('template_Q.png');
 
 %Convert to Gray levels
 im_gray = rgb2gray(im);
@@ -44,15 +44,15 @@ im_template_smoothed{1} = im_tem_gray;
 for i=2:15
     im_gray_smoothed{i} = conv2(im_gray_smoothed{i-1},maskGaus5,'same');
     im_template_smoothed{i} = conv2(im_template_smoothed{i-1},maskGaus5,'same');
-    
 end
 
 %Use sobel to tweak and get rid of background elements
-im_gray_edge = edge(im_gray_smoothed{2},'sobel',0.035);
+im_gray_edge = edge(im_gray_smoothed{2},'canny');
 %Use canny for template since it doesnt have noise or background
 im_temp_edge = edge(im_tem_gray,'canny');
 
-
+imwrite(im_gray_edge, 'Letters_edge.bmp', 'bmp');
+imwrite(im_temp_edge, 'Template_edge.bmp','bmp');
 
 %Step B: Start the algo
 %Step B.1: Find R-Tables
@@ -67,12 +67,15 @@ gradient_image = atan2(imfilter(double(im_gray_edge),[1; -1],'same'),imfilter(do
 
 %Once we find the edge we can create are R_table for it:
 
+%Hypothesis: 1 table will contain 3 and another 1 as 3 share the same
+%rotation
+
 %Dealing with the first rotation
 % (-1/6)pi
-Angle_The = (-1/6)*pi();
+Angle_The = 0;
 R_Table_The = zeros(full_circle_angle, size(x_pos,1), 2); 
 % (-2/3)pi
-Angle_Phi = (-2/3)*pi();
+Angle_Phi = (2/18)*pi();
 R_Table_Phi = zeros(full_circle_angle, size(x_pos,1), 2);
 
 %Find center of the template that had edge detection ran on it
@@ -165,14 +168,22 @@ end
 Bear_1 = mat2gray(The_R_TablePos);
 
 imwrite(Bear_1, 'accumulatorMatrixBear1.bmp', 'bmp');
+temp = max(max(The_R_TablePos));
+[first_bear_x,first_bear_y] = find(The_R_TablePos == temp);
+temp = max(max(The_R_TablePos(The_R_TablePos < (temp-100))));
+[first_bear_x_1,first_bear_y_1] = find(The_R_TablePos == temp);
+temp = max(max(The_R_TablePos(The_R_TablePos < (temp-10))));
+[first_bear_x_2,first_bear_y_2] = find(The_R_TablePos == temp);
 
-[first_bear_x,first_bear_y] = find(The_R_TablePos == max(max(The_R_TablePos)));
-
-%the votes:
-str = sprintf('Accumulator Matrix for object 1:(%d, %d)',first_bear_y,first_bear_x);
-subplot(222),imshow(Bear_1),title(str);
+%Subplot the first bear and its max value 
+subplot(222),imshow(Bear_1),title('Bear 1');
 hold on;
-circle(first_bear_y, first_bear_x, 5);
+circle(first_bear_y, first_bear_x, 3);
+hold on;
+circle(first_bear_y_1, first_bear_x_1, 3);
+hold on;
+circle(first_bear_y_2, first_bear_x_2, 3);
+
 
 %Step C.2: Bear 2
 Bear_2 = mat2gray(Phi_R_TablePos);
@@ -181,19 +192,31 @@ imwrite(Bear_2, 'accumulatorMatrixBear2.bmp', 'bmp');
 
 [second_bear_x,second_bear_y] = find(Phi_R_TablePos == max(max(Phi_R_TablePos)));
 
+%Subplot the second bear and its max value 
 subplot(223),imshow(Bear_2),title('Bear 2');
 hold on;
-circle(second_bear_y, second_bear_x, 5);
+circle(second_bear_y, second_bear_x, 3);
 
-subplot(224),imshow(im),title('Result');
+%plot the original image
+%I guess automation could be added in to find and select the q's but I am
+%currently strapped for tiem
+subplot(224),imshow(im),title('');
 hold on;
-plot(first_bear_y,first_bear_x,'g+', 'MarkerSize', 4);
+circle(first_bear_y, first_bear_x, 35);
 hold on;
-plot(second_bear_y,second_bear_x,'g+', 'MarkerSize', 4);
+circle(first_bear_y, first_bear_x, 4);
 hold on;
-circle(first_bear_y, first_bear_x, 20);
+circle(second_bear_y, second_bear_x, 35);
 hold on;
-circle(second_bear_y, second_bear_x, 20);
+circle(second_bear_y, second_bear_x, 4);
+hold on;
+circle(first_bear_y_1, first_bear_x_1, 35);
+hold on;
+circle(first_bear_y_1, first_bear_x_1, 4);
+hold on;
+circle(first_bear_y_2, first_bear_x_2, 35);
+hold on;
+circle(first_bear_y_2, first_bear_x_2, 4);
 
 % The following link was used as reference on how to create a subplot
 % circle, I had no idea how to do one so I followed this individuals
